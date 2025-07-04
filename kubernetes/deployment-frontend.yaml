@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+  namespace: chatapp  
+spec:
+  replicas: 1 # Number of replicas
+  selector:
+    matchLabels:
+      app: frontend  
+  template:
+    metadata:
+      name: frontend-pod
+      namespace: chatapp
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: frontend-container
+        image: artech0203/chatapp-frontend:letest # Replace with your backend image
+        ports:
+        - containerPort: 80
+        #- t # Port on which the backend listens
+        env:
+        - name: NODE_ENV
+          value: production

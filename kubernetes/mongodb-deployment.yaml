@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb-deployment
+  namespace: chatapp  
+spec:
+  replicas: 1 # Number of replicas
+  selector:
+    matchLabels:
+      app: mongodb  
+  template:
+    metadata:
+      name: mongodb-pod
+      namespace: chatapp
+      labels:
+        app: mongodb
+    spec:
+      containers: 
+      - name: mongodb-container
+        image: mongo:noble # Replace with your backend image
+        # image: mongo:latest # Use the official MongoDB image
+        ports:
+        - containerPort: 27017
+        env:
+        - name: MONGO_INITDB_ROOT_USERNAME
+          value: mongoadmin
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          value: secret
+      volumes:
+        - name: mongodb-data
+          persistentVolumeClaim: 
+            claimName: mongodb-pvc

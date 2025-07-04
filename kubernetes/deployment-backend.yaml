@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+  namespace: chatapp  
+spec:
+  replicas: 1 # Number of replicas
+  selector:
+    matchLabels:
+      app: backend  
+  template:
+    metadata:
+      name: backend
+      namespace: chatapp
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend-container
+        image: artech0203/chatapp-backend:letest # Replace with your backend image
+        ports:
+        - containerPort: 5001
+        env:
+        - name: NODE_ENV
+          value: production
+        - name: PORT
+          value: "5001"
+        - name: MONGODB_URI
+          value: "mongodb://mongoadmin:secret@mongodb-service:27017/chatapp?authSource=admin"
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: secret # Name of the secret created in secret.yaml
+              key: JWT_SECRET # Key in the secret that contains the JWT secret
